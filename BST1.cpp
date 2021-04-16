@@ -12,14 +12,14 @@ public:
     TreeNode* left;
     TreeNode* right;
     TreeNode(int x, string t, string g, string d, float p, string plat) : rating(x), title(t), genre(g), developer(d), price(p), platform(plat), left(nullptr), right(nullptr) {}
-};//comment
+};
 
 class Tree {
 private:
     TreeNode* root;
 public:
     TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, float prc, string pltf);
-    //level order ? traverse
+    void inorder(TreeNode* root);
 };
 
 int main()
@@ -39,7 +39,13 @@ TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, fl
     return root;
 }
 
-/*
-    
-    
-*/
+//Source: Powerpoint Trees-2 Slide 17
+void inorder(TreeNode* root) {
+    if (root == nullptr)
+        cout << "";
+    else {
+        inorder(root->left);
+        cout << root->rating << "";
+        inorder(root->right);
+    }
+}
