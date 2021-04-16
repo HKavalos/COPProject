@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class TreeNode {
@@ -41,11 +42,12 @@ TreeNode* insert(TreeNode* root, int key) {
 
 //Source: Powerpoint Trees-2 Slide 17
 void inorder(TreeNode* root) {
+    vector<TreeNode*> games;
     if (root == nullptr)
         cout << "";
     else {
         inorder(root->left);
-        cout << root->rating << "";
+        games.push_back(root);
         inorder(root->right);
     }
 }
