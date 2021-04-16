@@ -4,21 +4,21 @@ using namespace std;
 class TreeNode {
 public:
     int rating;
-    string title;
+    /*string title;
     string genre;
     string developer;
     float price;
-    string platform;
+    string platform;*/
     TreeNode* left;
     TreeNode* right;
-    TreeNode(int x, string t, string g, string d, float p, string plat) : rating(x), title(t), genre(g), developer(d), price(p), platform(plat), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : rating(x), left(nullptr), right(nullptr) {}
 };
 
 class Tree {
 private:
     TreeNode* root;
 public:
-    TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, float prc, string pltf);
+    TreeNode* insert(TreeNode* root, int key);
     void inorder(TreeNode* root);
 };
 
@@ -29,13 +29,13 @@ int main()
 }
 
 //Source: Powerpoint Trees-2 Slide 12
-TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, float prc, string pltf) {
+TreeNode* insert(TreeNode* root, int key) {
     if (root == nullptr)
-        return new TreeNode(key, tle, gnr, dev, prc, pltf);
+        return new TreeNode(key);
     if (key < root->rating)
-        root->left = insert(root->left, key, tle, gnr, dev, prc, pltf);
+        root->left = insert(root->left, key);
     else
-        root->right = insert(root->right, key, tle, gnr, dev, prc, pltf);
+        root->right = insert(root->right, key);
     return root;
 }
 
