@@ -20,7 +20,7 @@ private:
     TreeNode* root;
 public:
     TreeNode* insert(TreeNode* root, int key);
-    void inorder(TreeNode* root);
+    vector<TreeNode*> inorder(TreeNode* root);
 };
 
 int main()
@@ -41,7 +41,7 @@ TreeNode* insert(TreeNode* root, int key) {
 }
 
 //Source: Powerpoint Trees-2 Slide 17
-void inorder(TreeNode* root) {
+vector<TreeNode*> inorder(TreeNode* root) {
     vector<TreeNode*> games;
     if (root == nullptr)
         cout << "";
@@ -50,4 +50,5 @@ void inorder(TreeNode* root) {
         games.push_back(root);
         inorder(root->right);
     }
+    return games;
 }
