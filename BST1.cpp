@@ -12,7 +12,7 @@ public:
     TreeNode* left;
     TreeNode* right;
     TreeNode(int x, string t, string g, string d, float p, string plat) : rating(x), title(t), genre(g), developer(d), price(p), platform(plat), left(nullptr), right(nullptr) {}
-};
+};//comment
 
 class Tree {
 private:
