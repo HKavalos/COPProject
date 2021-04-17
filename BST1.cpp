@@ -5,7 +5,7 @@ using namespace std;
 class TreeNode {
 public:
     int rating;
-    /*string title;
+    string title;
     string genre;
     string developer;
     float price;
@@ -19,9 +19,8 @@ class Tree {
 private:
     TreeNode* root;
 public:
-    TreeNode* insert(TreeNode* root, int key);
-    vector<TreeNode*> inorder(TreeNode* root);
-};
+    TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, float prc, string pltf);
+    void inorder(TreeNode* root);
 
 int main()
 {
@@ -30,25 +29,25 @@ int main()
 }
 
 //Source: Powerpoint Trees-2 Slide 12
-TreeNode* insert(TreeNode* root, int key) {
+TreeNode* insert(TreeNode* root, int key, string tle, string gnr, string dev, float prc, string pltf) {
     if (root == nullptr)
-        return new TreeNode(key);
+        return new TreeNode(key, tle, gnr, dev, prc, pltf);
     if (key < root->rating)
-        root->left = insert(root->left, key);
+        root->left = insert(root->left, key, tle, gnr, dev, prc, pltf);
     else
-        root->right = insert(root->right, key);
+        root->right = insert(root->right, key, tle, gnr, dev, prc, pltf);
     return root;
 }
 
 //Source: Powerpoint Trees-2 Slide 17
-vector<TreeNode*> inorder(TreeNode* root) {
-    vector<TreeNode*> games;
+void inorder(TreeNode* root) {
+    //vector<TreeNode*> games;
     if (root == nullptr)
         cout << "";
     else {
         inorder(root->left);
-        games.push_back(root);
+        cout << root->rating << " ";
         inorder(root->right);
     }
-    return games;
+    //return games;
 }
