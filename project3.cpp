@@ -19,24 +19,26 @@ struct Games {
 
 struct PriorityQueue
 {
+    //calculates the index of the index's parent.
    int Parent(int i)
     {
         return (i - 1) / 2;
     }
 
-    //returns left child
+    //calculates the index of the index's left child.
     int LC(int i)
     {
         return (2 * i + 1);
     }
 
-    //returns right child
+    //calculates the index of the index's left child.
     int RC(int i)
     {
         return (2 * i + 2);
     }
 
-    //Heapify's up
+    //Heapify's up from pos x
+    // Average and worst case is O(log(N))
     void heapifyU(vector<Games>& MaxHeap, int x)
     {
         // Checks if swap is neccessary
@@ -49,6 +51,7 @@ struct PriorityQueue
     }
 
     //Heapifies down from pos x
+    // Average and worst case is O(log(N))
     void heapifyD(vector<Games>& MaxHeap, int x)
     {
         unsigned int left = LC(x);
@@ -83,7 +86,7 @@ struct PriorityQueue
         else
             return false;
     }
-
+    // Average and worst case is O(log(N))
     //inserts values then calls heapifyU
     void push(vector<Games>& MaxHeap, Games x)
     {
@@ -91,6 +94,8 @@ struct PriorityQueue
         int index = MaxHeap.size() - 1;
         heapifyU(MaxHeap,index);
     }
+    //Pops the head value and then calls heapifyD
+    // Average and worst case is O(log(N))
     Games pop(vector<Games>& MaxHeap)
     {
         Games temp = MaxHeap[0];
@@ -99,7 +104,8 @@ struct PriorityQueue
         heapifyD(MaxHeap,0);
         return temp;
     }
- 
+    
+    //Pops values and prints out the first 25 values that match the user inputed criteria
     void printPQ(vector<Games>& MaxHeap, string user_input)
     {
 
@@ -138,7 +144,9 @@ public:
     {
         root = nullptr;
     }
-    //O(n)
+    //Average case is O(log(N))
+    //Worst case is 0(N)
+    //recursivly inserts nodes
     TreeNode* insertNode(TreeNode* root, TreeNode* node) {
         if (root == nullptr) {
             root = node;
@@ -158,7 +166,8 @@ public:
     }
 
     //using reverse inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
-    //O(n)
+    // Average case is O(log(N))
+    //Worst case is 0(N)
     vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
         if (root == nullptr){
             return {};
