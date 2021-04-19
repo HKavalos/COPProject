@@ -19,54 +19,102 @@ struct Games {
 
 struct PriorityQueue
 {
-//from stepik quiz 6 and discussion slides 7
-    void heapifyDown (vector<Games> &heap, int size, int parent) {
-        int left = (2*parent) + 1; //formula to get tree location from array
-        int right = (2*parent) + 2;
-        int maxIndex = parent;
-    
-        if (right < size && heap[right].rating > heap[maxIndex].rating)  //check if right child is greater than parent, if yes switch the two
-            maxIndex = right;  
-        if (left < size && heap[left].rating > heap[maxIndex].rating) { // check if left child is greater than parent, if yes switch the two
-            maxIndex = left;
-        }
-        if (maxIndex != parent) {
-            Games temp = heap[parent];
-            heap[parent] = heap[maxIndex];
-            heap[maxIndex] = temp; //swap parent and largest elemen
-            heapifyDown(heap, size, maxIndex); //recursive call
-        }
 
+    //Heapify's up
+    void heapifyU(vector<Games>& MaxHeap, int x)
+    {
+        // Checks if swap is neccessary
+        if (MaxHeap[Parent(x)].rating < MaxHeap[x].rating)
+        {
+            swap(MaxHeap[x], MaxHeap[Parent(x)]);
+            //calls Heapifyu again
+            heapifyU(Parent(x));
+        }
     }
-    void PQpush(vector<Games> &heap, Games toInsert){
-        int size = heap.size();
 
-        if (size == 0){
-            heap.push_back(toInsert);
-        }
-        else {
-            heap.push_back(toInsert);
-            for (int i = size/2 - 1; i>= 0; i--)
-                heapifyDown(heap, size, i);
-        }
-    
+    //Heapifies down from pos x
+    void heapifyD(vector<Games>& MaxHeap, int x)
+    {
+        unsigned int left = LC(x);
+        unsigned int right = RC(x);
 
+        int lpos = x;
+
+        //determines if and which child to switch with
+        if (left < MaxHeap.size() && MaxHeap[left].rating > MaxHeap[x].rating)
+        {
+            lpos = left;
+        }
+
+        if (right < MaxHeap.size() && MaxHeap[right].rating > MaxHeap[lpos].rating)
+        {
+            lpos = right;
+        }
+
+        //swaps and calls HeapifyD again
+        if (lpos != x)
+        {
+            swap(MaxHeap[x], MaxHeap[lpos]);
+            heapifyD(lpos);
+        }
     }
-    void printPQ(vector<Games> &heap, string user_input){
+
+    //checks if maxheap is empty
+    bool empty(vector<Games>& MaxHeap)
+    {
+        if (MaxHeap.size() == 0)
+            return true;
+        else
+            return false;
+    }
+
+    //inserts values then calls heapifyU
+    void push(vector<Games>& MaxHeap, Games x)
+    {
+        MaxHeap.push_back(x);
+        int index = MaxHeap.size() - 1;
+        heapifyU(index);
+    }
+    Games pop(vector<Games>& MaxHeap)
+    {
+        Games temp = MaxHeap[0];
+        MaxHeap[0] = MaxHeap.back();
+        MaxHeap.pop_back();
+        heapifyD(0);
+        return temp;
+    }
+    int Parent(int i)
+    {
+        return (i - 1) / 2;
+    }
+
+    //returns left child
+    int LC(int i)
+    {
+        return (2 * i + 1);
+    }
+
+    //returns right child
+    int RC(int i)
+    {
+        return (2 * i + 2);
+    }
+
+    void printPQ(vector<Games>& MaxHeap, string user_input)
+    {
+
         int count = 0;
         user_input = "\"" + user_input + "\"";
-    
-        for(int i = 0; i < heap.size(); i++) {
-            if(count == 25)
-                break;
-            if(heap[i].genres == user_input || heap[i].genres.find(user_input) != string::npos) {
-                std::cout << count + 1 << "." << heap[i].game_names << " | " <<heap[i].rating << "% | " << heap[i].genres << " | " << heap[i].platforms << " | " << heap[i].pubs_devs << endl;
+
+        while (count != 25)
+        {
+            Games printer = pop(MaxHeap);
+            if (printer.genres == user_input || printer.genres.find(user_input) != string::npos) {
+                std::cout << count + 1 << "." << printer.game_names << " | " << printer.rating << "% | " << printer.genres << " | " << printer.platforms << " | " << printer.pubs_devs << endl;
                 count++;
-    
             }
         }
-
-    }   
+    } 
 };
 
 
