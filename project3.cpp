@@ -17,6 +17,58 @@ struct Games {
     string pubs_devs;
 };
 
+
+
+//from stepik quiz 6 and discussion slides 7
+void heapifyDown (vector<Games> &heap, int size, int parent) {
+    int left = (2*parent) + 1; //formula to get tree location from array
+    int right = (2*parent) + 2;
+    int maxIndex = parent;
+    
+    if (right < size && heap[right].rating > heap[maxIndex].rating)  //check if right child is greater than parent, if yes switch the two
+        maxIndex = right;  
+    if (left < size && heap[left].rating > heap[maxIndex].rating) { // check if left child is greater than parent, if yes switch the two
+        maxIndex = left;
+    }
+    if (maxIndex != parent) {
+        Games temp = heap[parent];
+        heap[parent] = heap[maxIndex];
+        heap[maxIndex] = temp; //swap parent and largest elemen
+        heapifyDown(heap, size, maxIndex); //recursive call
+    }
+
+}
+void PQpush(vector<Games> &heap, Games toInsert){
+    int size = heap.size();
+
+    if (size == 0){
+        heap.push_back(toInsert);
+    }
+    else {
+        heap.push_back(toInsert);
+        for (int i = size/2 - 1; i>= 0; i--)
+            heapifyDown(heap, size, i);
+    }
+    
+
+}
+void printPQ(vector<Games> &heap, string user_input){
+    int count = 0;
+    user_input = "\"" + user_input + "\"";
+    
+    for(int i = 0; i < heap.size(); i++) {
+        if(count == 50)
+            break;
+        if(heap[i].genres == user_input || heap[i].genres.find(user_input) != string::npos) {
+            std::cout << count + 1 << "." << heap[i].game_names << " | " <<heap[i].rating << "% | " << heap[i].genres << " | " << heap[i].platforms << " | " << heap[i].pubs_devs << endl;
+            count++;
+    
+        }
+    }
+
+}
+
+
 class TreeNode {
 public:
     int key;  //rating
@@ -26,122 +78,6 @@ public:
 
 };
 
-struct PriorityQueue
-{
-private:
-    //stores values
-    vector<Games> MaxHeap;
-    int Parent(int i)
-    {
-        return (i - 1) / 2;
-    }
-
-    //returns left child
-    int LC(int i)
-    {
-        return (2 * i + 1);
-    }
-
-    //returns right child
-    int RC(int i)
-    {
-        return (2 * i + 2);
-    }
-
-
-    //Heapify's up
-    void heapifyU(int x)
-    {
-        // Checks if swap is neccessary
-        if (MaxHeap[Parent(x)].rating < MaxHeap[x].rating)
-        {
-            swap(MaxHeap[x], MaxHeap[Parent(x)]);
-            //calls Heapifyu again
-            heapifyU(Parent(x));
-        }
-    }
-    //Heapifies down from pos x
-    void heapifyD(int x)
-    {
-        unsigned int left = LC(x);
-        unsigned int right = RC(x);
-
-        int lpos = x;
-
-        //determines if and which child to switch with
-        if (left < MaxHeap.size() && MaxHeap[left].rating > MaxHeap[x].rating)
-        {
-            lpos = left;
-        }
-
-        if (right < MaxHeap.size() && MaxHeap[right].rating > MaxHeap[lpos].rating)
-        {
-            lpos = right;
-        }
-
-        //swaps and calls HeapifyD again
-        if (lpos != x)
-        {
-            swap(MaxHeap[x], MaxHeap[lpos]);
-            heapifyD(lpos);
-        }
-    }
-
-    void buildMaxHeap() {
-        for (int i = MaxHeap.size() / 2; i >= 0; i--) {
-            this->heapifyD(i);
-        }
-    }
-    void print() {
-
-
-    }
-
-public:
-
-    //checks if maxheap is empty
-    bool empty()
-    {
-        if (MaxHeap.size() == 0)
-            return true;
-        else
-            return false;
-    }
-
-    //inserts values then calls heapifyU
-    void push(Games x)
-    {
-        MaxHeap.push_back(x);
-        int index = MaxHeap.size() - 1;
-        heapifyU(index);
-    }
-
-    //Pops the next element
-    Games pop()
-    {
-        if (MaxHeap.size() == 0)
-            exit;
-        Games temp = MaxHeap[0];
-        MaxHeap[0] = MaxHeap.back();
-        MaxHeap.pop_back();
-        heapifyD(0);
-        return temp;
-    }
-
-    void topPicks(string test)
-    {
-        int count = 50;
-        while (count > 0)
-        {
-            Games value = pop();
-            if (value.genres == test)
-            {
-                cout << value.game_names << endl;
-                count--;
-            }
-        }
-    }
-};
 
 class IGDB {
 public:
@@ -185,23 +121,24 @@ public:
     }*/
 
     //using inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
-    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*>& games) {
-        if (root == nullptr) {
+    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
+        if (root == nullptr){
             return {};
         }
         //if input is in gamedata contains input string, game is added to vector
-        if (root->gamedata.genres.find(genre) != string::npos) {
+        if (root->gamedata.genres.find(genre) != string::npos ) {
             games.push_back(root);
         }
         if (root->gamedata.genres == genre) {
             games.push_back(root);
         }
-        inorderSearchGenre(genre, root->left, games);
         inorderSearchGenre(genre, root->right, games);
+        inorderSearchGenre(genre, root->left, games);
+        
 
         return games;
     }
-
+    
 
 
 };
@@ -220,23 +157,25 @@ string capitalize_first_letter(string input) {
 int main() {
 
     Games gameObj;
+    vector<Games> gamesVec;
 
     string filePath = "games.csv";
     IGDB igdb;
     fstream inFile;
     string output;
-
+ 
     char del = ',';
     inFile.open(filePath, ios::in);
     int cnt = 0;
-    int id = 0;
+    int id = 0; 
     //int BST_time = 0;
 
-    PriorityQueue games_PQ = PriorityQueue();
-    if (inFile.is_open()) {
-        string tp;
+    
 
-        std::cout << "Initializing data in BST..." << endl;
+    if (inFile.is_open()) {
+        string tp;  
+        
+        std::cout << "Initializing data to BST and Priority Queue..." << endl << endl;
         auto start = high_resolution_clock::now();
 
         while (!inFile.eof()) {
@@ -274,28 +213,30 @@ int main() {
 
             getline(inFile, output);
             gameObj.pubs_devs = output;
+            
+            PQpush(gamesVec,gameObj);
 
             newnode->key = gameObj.id;
             newnode->gamedata = gameObj;
 
-            games_PQ.push(gameObj);
 
+           
             igdb.root = igdb.insertNode(igdb.root, newnode);
-
-
+     
+            
+            
             cnt++;
 
         }
-        // auto stop = high_resolution_clock::now();
-         //auto duration = duration_cast<microseconds>(stop - start);
-         //BST_time = duration.count();
-        // cout << "BST Insertion: " << BST_time << " microseconds" << endl;
-
+       // auto stop = high_resolution_clock::now();
+        //auto duration = duration_cast<microseconds>(stop - start);
+        //BST_time = duration.count();
+       // cout << "BST Insertion: " << BST_time << " microseconds" << endl;
+       
 
         inFile.close();
     }
-
-    string user_input;
+    
     cout << "Welcome to our Game Recommender!" << endl << endl;
 
     cout << "Genre Options: " << endl << endl;
@@ -309,7 +250,7 @@ int main() {
     cout << "Real Time Strategy (RTS)" << endl;
     cout << "Role-playing (RPG)" << endl;
     cout << "Simulator" << endl;
-    cout << "Sport" << endl;
+    cout << "Sport"<< endl;
     cout << "Strategy" << endl;
     cout << "Turn-based strategy (TBS)" << endl;
     cout << "Tactical" << endl;
@@ -321,16 +262,14 @@ int main() {
     cout << "Visual Novel" << endl;
     cout << "Indie" << endl;
     cout << "Card & Board Game" << endl;
-    cout << "MOBA" << endl << endl;
+    cout << "MOBA" << endl << endl; 
 
-
+    string user_input;
     cout << "Please enter your favorite genre from the list above: ";
-
     cin >> user_input;
     user_input = capitalize_first_letter(user_input);
-    cout << "Getting top 50 games..." << endl;
 
-    games_PQ.topPicks(user_input);
+    cout << "Getting top 50 games..." << endl << endl;
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
@@ -338,21 +277,22 @@ int main() {
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
 
+    cout << "Top 50 Games by Priority Queue:" << endl;
+    auto start2 = high_resolution_clock::now();
+    printPQ(gamesVec, user_input);
+    auto stop2 = high_resolution_clock::now();
+    auto PQtime = duration_cast<microseconds>(stop2 - start2);
+    cout << "\nPriority Queue Search by Genre: " << PQtime.count() <<" microseconds" << endl << endl << endl;
 
-
-
-
-
+    cout << "Top 50 Games by BST: " << endl;
     for (int i = 0; i < 50; i++) {
-        cout << igdb.games[i]->gamedata.game_names << endl << endl;
-    }
+        cout << i + 1 << "." << igdb.games[i]->gamedata.game_names << " | " << igdb.games[i]->gamedata.rating << "% | " << igdb.games[i]->gamedata.genres << " | " << igdb.games[i]->gamedata.platforms << " | " << igdb.games[i]->gamedata.pubs_devs << endl;
 
-    cout << "BST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
+    } 
+    
+    cout << "\nBST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
 
-    //TODO: create menu for user to choose preferred genre
-    //TODO: put games in PQ
-
-
+    cout << "\nThanks for Using Game Recommender!";
 
     delete igdb.root;
 
