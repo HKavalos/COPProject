@@ -116,6 +116,19 @@ public:
         return temp;
     }
 
+    void topPicks(string test)
+    {
+        int count = 50;
+        while (count > 0)
+        {
+            Games value = pop();
+            if (value.genres == test)
+            {
+                cout << value.game_names << endl;
+                count--;
+            }
+        }
+    }
 };
 
 class IGDB {
@@ -253,6 +266,7 @@ int main() {
             newnode->key = gameObj.id;
             newnode->gamedata = gameObj;
 
+            games_PQ.push(gameObj);
             
             igdb.root = igdb.insertNode(igdb.root, newnode);
             
@@ -268,12 +282,15 @@ int main() {
 
         inFile.close();
     }
+
     string user_input;
 
     cout << "Please enter your favorite genre: ";
     cin >> user_input;
     user_input = capitalize_first_letter(user_input);
     cout << "Getting top 50 games..." << endl;
+
+    topPicks(user_input);
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
