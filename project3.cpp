@@ -108,7 +108,7 @@ public:
         return root;
     }
 
-    //using inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
+    //using postorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
     vector <TreeNode*> postorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
         if (root == nullptr){
             return {};
@@ -159,7 +159,7 @@ int main() {
     if (inFile.is_open()) {
         string tp;  
         
-        std::cout << "Initializing data to BST and Priority Queue..." << endl << endl;
+        std::cout << "\nInitializing data to BST and Priority Queue..." << endl << endl;
         auto start = high_resolution_clock::now();
 
         while (!inFile.eof()) {
@@ -219,28 +219,21 @@ int main() {
     cout << "Welcome to our Game Recommender!" << endl << endl;
 
     cout << "Genre Options: " << endl << endl;
-    cout << "Point-and-click" << endl;
     cout << "Fighting" << endl;
     cout << "Shooter" << endl;
     cout << "Music" << endl;
     cout << "Platform" << endl;
     cout << "Puzzle" << endl;
     cout << "Racing" << endl;
-    cout << "Real Time Strategy (RTS)" << endl;
-    cout << "Role-playing (RPG)" << endl;
     cout << "Simulator" << endl;
     cout << "Sport"<< endl;
     cout << "Strategy" << endl;
-    cout << "Turn-based strategy (TBS)" << endl;
     cout << "Tactical" << endl;
-    cout << "Quiz/Trivia" << endl;
-    cout << "Hack and slash/Beat 'em up" << endl;
     cout << "Pinball" << endl;
     cout << "Adventure" << endl;
     cout << "Arcade" << endl;
     cout << "Visual Novel" << endl;
     cout << "Indie" << endl;
-    cout << "Card & Board Game" << endl;
     cout << "MOBA" << endl << endl; 
 
     string user_input;
