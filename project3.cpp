@@ -57,7 +57,7 @@ void printPQ(vector<Games> &heap, string user_input){
     user_input = "\"" + user_input + "\"";
     
     for(int i = 0; i < heap.size(); i++) {
-        if(count == 50)
+        if(count == 25)
             break;
         if(heap[i].genres == user_input || heap[i].genres.find(user_input) != string::npos) {
             std::cout << count + 1 << "." << heap[i].game_names << " | " <<heap[i].rating << "% | " << heap[i].genres << " | " << heap[i].platforms << " | " << heap[i].pubs_devs << endl;
@@ -108,38 +108,25 @@ public:
         return root;
     }
 
-    /*
-    void inorder(TreeNode* root) {
-        //vector<TreeNode*> games;
-        if (root == nullptr)
-            cout << "";
-        else {
-            inorder(root->left);
-            cout << root->gamedata.game_names << " ";
-            inorder(root->right);
-        }
-    }*/
-
     //using inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
-    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
+    vector <TreeNode*> postorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
         if (root == nullptr){
             return {};
         }
-        //if input is in gamedata contains input string, game is added to vector
-        if (root->gamedata.genres.find(genre) != string::npos ) {
-            games.push_back(root);
-        }
-        if (root->gamedata.genres == genre) {
-            games.push_back(root);
-        }
-        inorderSearchGenre(genre, root->right, games);
-        inorderSearchGenre(genre, root->left, games);
+        postorderSearchGenre(genre, root->left, games);
+        postorderSearchGenre(genre, root->right, games);
         
+        
+        //if input is in gamedata contains input string, game is added to vector
+        if (root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating != 0) {
+            games.push_back(root);
+        }
+        if (root->gamedata.genres == genre && root->gamedata.rating != 0) {
+            games.push_back(root);
+        }
 
         return games;
     }
-    
-
 
 };
 string capitalize_first_letter(string input) {
@@ -168,10 +155,7 @@ int main() {
     inFile.open(filePath, ios::in);
     int cnt = 0;
     int id = 0; 
-    //int BST_time = 0;
-
-    
-
+   
     if (inFile.is_open()) {
         string tp;  
         
@@ -228,11 +212,6 @@ int main() {
             cnt++;
 
         }
-       // auto stop = high_resolution_clock::now();
-        //auto duration = duration_cast<microseconds>(stop - start);
-        //BST_time = duration.count();
-       // cout << "BST Insertion: " << BST_time << " microseconds" << endl;
-       
 
         inFile.close();
     }
@@ -269,30 +248,31 @@ int main() {
     cin >> user_input;
     user_input = capitalize_first_letter(user_input);
 
-    cout << "Getting top 50 games..." << endl << endl;
+    cout << "Getting top 25 games..." << endl << endl;
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
-    igdb.inorderSearchGenre(user_input, igdb.root, igdb.games);
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
+    igdb.postorderSearchGenre(user_input, igdb.root, igdb.games);
+    
+    
 
-    cout << "Top 50 Games by Priority Queue:" << endl;
+    cout << "Top 25 Games from Priority Queue:" << endl;
     auto start2 = high_resolution_clock::now();
     printPQ(gamesVec, user_input);
     auto stop2 = high_resolution_clock::now();
     auto PQtime = duration_cast<microseconds>(stop2 - start2);
     cout << "\nPriority Queue Search by Genre: " << PQtime.count() <<" microseconds" << endl << endl << endl;
 
-    cout << "Top 50 Games by BST: " << endl;
-    for (int i = 0; i < 50; i++) {
+    cout << "Top 25 Games from BST: " << endl;
+    for (int i = 0; i < 25; i++) {
         cout << i + 1 << "." << igdb.games[i]->gamedata.game_names << " | " << igdb.games[i]->gamedata.rating << "% | " << igdb.games[i]->gamedata.genres << " | " << igdb.games[i]->gamedata.platforms << " | " << igdb.games[i]->gamedata.pubs_devs << endl;
 
     } 
-    
-    cout << "\nBST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "\nBST Postorder Search by Genre: " << duration.count() << " microseconds" << endl;
 
-    cout << "\nThanks for Using Game Recommender!";
+    cout << "\nThanks for Using Game Recommender! :)";
 
     delete igdb.root;
 
