@@ -87,6 +87,16 @@ private:
         }
     }
 
+    void buildMaxHeap() {
+        for (int i = MaxHeap.size() / 2; i >= 0; i--) {
+            this->heapifyD(i);
+        }
+    }
+    void print() {
+
+
+    }
+
 public:
 
     //checks if maxheap is empty
@@ -109,6 +119,8 @@ public:
     //Pops the next element
     Games pop()
     {
+        if (MaxHeap.size() == 0)
+            exit;
         Games temp = MaxHeap[0];
         MaxHeap[0] = MaxHeap.back();
         MaxHeap.pop_back();
@@ -173,12 +185,12 @@ public:
     }*/
 
     //using inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
-    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
-        if (root == nullptr){
+    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*>& games) {
+        if (root == nullptr) {
             return {};
         }
         //if input is in gamedata contains input string, game is added to vector
-        if (root->gamedata.genres.find(genre) != string::npos ) {
+        if (root->gamedata.genres.find(genre) != string::npos) {
             games.push_back(root);
         }
         if (root->gamedata.genres == genre) {
@@ -189,7 +201,7 @@ public:
 
         return games;
     }
-    
+
 
 
 };
@@ -213,17 +225,17 @@ int main() {
     IGDB igdb;
     fstream inFile;
     string output;
- 
+
     char del = ',';
     inFile.open(filePath, ios::in);
     int cnt = 0;
-    int id = 0; 
+    int id = 0;
     //int BST_time = 0;
 
     PriorityQueue games_PQ = PriorityQueue();
     if (inFile.is_open()) {
-        string tp;  
-        
+        string tp;
+
         std::cout << "Initializing data in BST..." << endl;
         auto start = high_resolution_clock::now();
 
@@ -267,30 +279,58 @@ int main() {
             newnode->gamedata = gameObj;
 
             games_PQ.push(gameObj);
-            
+
             igdb.root = igdb.insertNode(igdb.root, newnode);
-            
-            
+
+
             cnt++;
 
         }
-       // auto stop = high_resolution_clock::now();
-        //auto duration = duration_cast<microseconds>(stop - start);
-        //BST_time = duration.count();
-       // cout << "BST Insertion: " << BST_time << " microseconds" << endl;
-       
+        // auto stop = high_resolution_clock::now();
+         //auto duration = duration_cast<microseconds>(stop - start);
+         //BST_time = duration.count();
+        // cout << "BST Insertion: " << BST_time << " microseconds" << endl;
+
 
         inFile.close();
     }
 
     string user_input;
+    cout << "Welcome to our Game Recommender!" << endl << endl;
 
-    cout << "Please enter your favorite genre: ";
+    cout << "Genre Options: " << endl << endl;
+    cout << "Point-and-click" << endl;
+    cout << "Fighting" << endl;
+    cout << "Shooter" << endl;
+    cout << "Music" << endl;
+    cout << "Platform" << endl;
+    cout << "Puzzle" << endl;
+    cout << "Racing" << endl;
+    cout << "Real Time Strategy (RTS)" << endl;
+    cout << "Role-playing (RPG)" << endl;
+    cout << "Simulator" << endl;
+    cout << "Sport" << endl;
+    cout << "Strategy" << endl;
+    cout << "Turn-based strategy (TBS)" << endl;
+    cout << "Tactical" << endl;
+    cout << "Quiz/Trivia" << endl;
+    cout << "Hack and slash/Beat 'em up" << endl;
+    cout << "Pinball" << endl;
+    cout << "Adventure" << endl;
+    cout << "Arcade" << endl;
+    cout << "Visual Novel" << endl;
+    cout << "Indie" << endl;
+    cout << "Card & Board Game" << endl;
+    cout << "MOBA" << endl << endl;
+
+
+    cout << "Please enter your favorite genre from the list above: ";
+
     cin >> user_input;
     user_input = capitalize_first_letter(user_input);
     cout << "Getting top 50 games..." << endl;
 
-    topPicks(user_input);
+    games_PQ.topPicks(user_input);
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
@@ -299,21 +339,20 @@ int main() {
     auto duration = duration_cast<microseconds>(stop - start);
 
 
-   
 
 
-    
+
+
     for (int i = 0; i < 50; i++) {
         cout << igdb.games[i]->gamedata.game_names << endl << endl;
+    }
 
-    } 
-    
     cout << "BST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
-  
+
     //TODO: create menu for user to choose preferred genre
     //TODO: put games in PQ
 
-    
+
 
     delete igdb.root;
 
