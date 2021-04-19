@@ -214,7 +214,7 @@ int main() {
         inFile.close();
     }
     
-    cout << "Welcome to our Game Recommender!" << endl << endl;
+    cout << "Welcome to our Game Parser!" << endl << endl;
 
     cout << "Genre Options: " << endl << endl;
     cout << "Fighting" << endl;
@@ -263,7 +263,7 @@ int main() {
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "\nBST Postorder Search by Genre: " << duration.count() << " microseconds" << endl;
 
-    cout << "\nThanks for Using Game Recommender! :)\n";
+    cout << "\nThanks for Using Game Parser! :)\n";
 
     delete igdb.root;
 
