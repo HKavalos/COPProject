@@ -111,13 +111,13 @@ public:
 
     //using reverse inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
     //O(n)
-    vector <TreeNode*> inorderRevSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
+    vector <TreeNode*> inorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
         if (root == nullptr){
             return {};
         }
        
      
-         inorderRevSearchGenre(genre, root->left, games);
+         inorderSearchGenre(genre, root->left, games);
         
         //if input is in gamedata contains input string, game is added to vector
         if (root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating != 0) {
@@ -127,7 +127,7 @@ public:
             games.push_back(root);
         }   
         
-        inorderRevSearchGenre(genre, root->right, games);
+        inorderSearchGenre(genre, root->right, games);
         
 
         return games;
@@ -247,7 +247,7 @@ int main() {
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
-    igdb.inorderRevSearchGenre(user_input, igdb.root, igdb.games);
+    igdb.inorderSearchGenre(user_input, igdb.root, igdb.games);
     
     
 
@@ -266,7 +266,7 @@ int main() {
     } 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    cout << "\nBST Postorder Search by Genre: " << duration.count() << " microseconds" << endl;
+    cout << "\nBST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
 
     cout << "\nThanks for Using Game Parser! :)\n";
 
