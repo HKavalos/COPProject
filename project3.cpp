@@ -17,56 +17,57 @@ struct Games {
     string pubs_devs;
 };
 
-
-
+struct PriorityQueue
+{
 //from stepik quiz 6 and discussion slides 7
-void heapifyDown (vector<Games> &heap, int size, int parent) {
-    int left = (2*parent) + 1; //formula to get tree location from array
-    int right = (2*parent) + 2;
-    int maxIndex = parent;
+    void heapifyDown (vector<Games> &heap, int size, int parent) {
+        int left = (2*parent) + 1; //formula to get tree location from array
+        int right = (2*parent) + 2;
+        int maxIndex = parent;
     
-    if (right < size && heap[right].rating > heap[maxIndex].rating)  //check if right child is greater than parent, if yes switch the two
-        maxIndex = right;  
-    if (left < size && heap[left].rating > heap[maxIndex].rating) { // check if left child is greater than parent, if yes switch the two
-        maxIndex = left;
-    }
-    if (maxIndex != parent) {
-        Games temp = heap[parent];
-        heap[parent] = heap[maxIndex];
-        heap[maxIndex] = temp; //swap parent and largest elemen
-        heapifyDown(heap, size, maxIndex); //recursive call
-    }
-
-}
-void PQpush(vector<Games> &heap, Games toInsert){
-    int size = heap.size();
-
-    if (size == 0){
-        heap.push_back(toInsert);
-    }
-    else {
-        heap.push_back(toInsert);
-        for (int i = size/2 - 1; i>= 0; i--)
-            heapifyDown(heap, size, i);
-    }
-    
-
-}
-void printPQ(vector<Games> &heap, string user_input){
-    int count = 0;
-    user_input = "\"" + user_input + "\"";
-    
-    for(int i = 0; i < heap.size(); i++) {
-        if(count == 25)
-            break;
-        if(heap[i].genres == user_input || heap[i].genres.find(user_input) != string::npos) {
-            std::cout << count + 1 << "." << heap[i].game_names << " | " <<heap[i].rating << "% | " << heap[i].genres << " | " << heap[i].platforms << " | " << heap[i].pubs_devs << endl;
-            count++;
-    
+        if (right < size && heap[right].rating > heap[maxIndex].rating)  //check if right child is greater than parent, if yes switch the two
+            maxIndex = right;  
+        if (left < size && heap[left].rating > heap[maxIndex].rating) { // check if left child is greater than parent, if yes switch the two
+            maxIndex = left;
         }
-    }
+        if (maxIndex != parent) {
+            Games temp = heap[parent];
+            heap[parent] = heap[maxIndex];
+            heap[maxIndex] = temp; //swap parent and largest elemen
+            heapifyDown(heap, size, maxIndex); //recursive call
+        }
 
-}
+    }
+    void PQpush(vector<Games> &heap, Games toInsert){
+        int size = heap.size();
+
+        if (size == 0){
+            heap.push_back(toInsert);
+        }
+        else {
+            heap.push_back(toInsert);
+            for (int i = size/2 - 1; i>= 0; i--)
+                heapifyDown(heap, size, i);
+        }
+    
+
+    }
+    void printPQ(vector<Games> &heap, string user_input){
+        int count = 0;
+        user_input = "\"" + user_input + "\"";
+    
+        for(int i = 0; i < heap.size(); i++) {
+            if(count == 25)
+                break;
+            if(heap[i].genres == user_input || heap[i].genres.find(user_input) != string::npos) {
+                std::cout << count + 1 << "." << heap[i].game_names << " | " <<heap[i].rating << "% | " << heap[i].genres << " | " << heap[i].platforms << " | " << heap[i].pubs_devs << endl;
+                count++;
+    
+            }
+        }
+
+    }   
+};
 
 
 class TreeNode {
@@ -144,6 +145,8 @@ string capitalize_first_letter(string input) {
 int main() {
 
     Games gameObj;
+
+    PriorityQueue PQ = PriorityQueue();
     vector<Games> gamesVec;
 
     string filePath = "games.csv";
@@ -198,21 +201,16 @@ int main() {
             getline(inFile, output);
             gameObj.pubs_devs = output;
             
-            PQpush(gamesVec,gameObj);
+            PQ.PQpush(gamesVec,gameObj);
 
             newnode->key = gameObj.id;
             newnode->gamedata = gameObj;
 
-
-           
             igdb.root = igdb.insertNode(igdb.root, newnode);
      
-            
-            
             cnt++;
 
         }
-
         inFile.close();
     }
     
@@ -251,7 +249,7 @@ int main() {
 
     cout << "Top 25 Games from Priority Queue:" << endl;
     auto start2 = high_resolution_clock::now();
-    printPQ(gamesVec, user_input);
+    PQ.printPQ(gamesVec, user_input);
     auto stop2 = high_resolution_clock::now();
     auto PQtime = duration_cast<microseconds>(stop2 - start2);
     cout << "\nPriority Queue Search by Genre: " << PQtime.count() <<" microseconds" << endl << endl << endl;
@@ -265,7 +263,7 @@ int main() {
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "\nBST Postorder Search by Genre: " << duration.count() << " microseconds" << endl;
 
-    cout << "\nThanks for Using Game Recommender! :)";
+    cout << "\nThanks for Using Game Recommender! :)\n";
 
     delete igdb.root;
 
