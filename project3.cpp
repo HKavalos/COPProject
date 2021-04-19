@@ -66,7 +66,7 @@ struct PriorityQueue
             }
         }
 
-    }   
+    } 
 };
 
 
@@ -90,7 +90,7 @@ public:
     {
         root = nullptr;
     }
-
+    //O(n)
     TreeNode* insertNode(TreeNode* root, TreeNode* node) {
         if (root == nullptr) {
             root = node;
@@ -109,14 +109,15 @@ public:
         return root;
     }
 
-    //using postorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
-    vector <TreeNode*> postorderSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
+    //using reverse inorder traversal, searches for the genre inputted by the user and if node contains the genre, pushes node into a vector of nodes
+    //O(n)
+    vector <TreeNode*> inorderRevSearchGenre(string genre, TreeNode* root, vector<TreeNode*> &games) {
         if (root == nullptr){
             return {};
         }
-        postorderSearchGenre(genre, root->left, games);
-        postorderSearchGenre(genre, root->right, games);
-        
+       
+     
+         inorderRevSearchGenre(genre, root->left, games);
         
         //if input is in gamedata contains input string, game is added to vector
         if (root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating != 0) {
@@ -124,7 +125,10 @@ public:
         }
         if (root->gamedata.genres == genre && root->gamedata.rating != 0) {
             games.push_back(root);
-        }
+        }   
+        
+        inorderRevSearchGenre(genre, root->right, games);
+        
 
         return games;
     }
@@ -243,12 +247,13 @@ int main() {
 
     //user_input = "\"" + user_input + "\"";
     auto start = high_resolution_clock::now();
-    igdb.postorderSearchGenre(user_input, igdb.root, igdb.games);
+    igdb.inorderRevSearchGenre(user_input, igdb.root, igdb.games);
     
     
 
     cout << "Top 25 Games from Priority Queue:" << endl;
     auto start2 = high_resolution_clock::now();
+    
     PQ.printPQ(gamesVec, user_input);
     auto stop2 = high_resolution_clock::now();
     auto PQtime = duration_cast<microseconds>(stop2 - start2);
@@ -266,5 +271,6 @@ int main() {
     cout << "\nThanks for Using Game Parser! :)\n";
 
     delete igdb.root;
+    delete &gamesVec;
 
 }
