@@ -120,7 +120,7 @@ struct PriorityQueue
 
 class TreeNode {
 public:
-    int key;  //rating
+    double key;  //rating
     Games gamedata = {};
     TreeNode* left = nullptr;
     TreeNode* right = nullptr;
@@ -152,7 +152,7 @@ public:
             root->right = insertNode(root->right, node);
         }
         else {
-            return root;
+           return root;
         }
         return root;
     }
@@ -164,7 +164,7 @@ public:
             return {};
         }
         inorderSearchGenre(genre, root->right, games);
-        if(root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating > 80)
+        if(root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating)
             games.push_back(root);
         inorderSearchGenre(genre, root->left, games);
         
@@ -255,7 +255,7 @@ int main() {
             
             PQ.push(gamesVec,gameObj);
 
-            newnode->key = gameObj.id;
+            newnode->key = gameObj.rating;
             newnode->gamedata = gameObj;
 
             igdb.root = igdb.insertNode(igdb.root, newnode);
