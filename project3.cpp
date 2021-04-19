@@ -163,10 +163,8 @@ public:
         if (root == nullptr){
             return {};
         }
-       
-     
         inorderSearchGenre(genre, root->right, games);
-        if (root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating != 0)
+        if(root->gamedata.genres.find(genre) != string::npos && root->gamedata.rating > 80)
             games.push_back(root);
         inorderSearchGenre(genre, root->left, games);
         
@@ -174,12 +172,12 @@ public:
         return games;
     }
 
-    void printBST(vector <TreeNode*> &games) {
+    void printBST(vector <TreeNode*> &games, string user_input) {
 
         for (int i = 0; i < 25; i++) {
-        cout << i + 1 << "." << games[i]->gamedata.game_names << " | " << games[i]->gamedata.rating << "% | " << games[i]->gamedata.genres << " | " << games[i]->gamedata.platforms << " | " << games[i]->gamedata.pubs_devs << endl;
+            cout << i + 1 << "." << games[i]->gamedata.game_names << " | " << games[i]->gamedata.rating << "% | " << games[i]->gamedata.genres << " | " << games[i]->gamedata.platforms << " | " << games[i]->gamedata.pubs_devs << endl;
        
-    } 
+        } 
 
     }
 
@@ -257,7 +255,7 @@ int main() {
             
             PQ.push(gamesVec,gameObj);
 
-            newnode->key = gameObj.rating;
+            newnode->key = gameObj.id;
             newnode->gamedata = gameObj;
 
             igdb.root = igdb.insertNode(igdb.root, newnode);
@@ -281,12 +279,9 @@ int main() {
     cout << "Sport"<< endl;
     cout << "Strategy" << endl;
     cout << "Tactical" << endl;
-    cout << "Pinball" << endl;
     cout << "Adventure" << endl;
     cout << "Arcade" << endl;
-    cout << "Visual Novel" << endl;
-    cout << "Indie" << endl;
-    cout << "MOBA" << endl << endl; 
+    cout << "Indie" << endl << endl;
 
     string user_input;
     cout << "Please enter your favorite genre from the list above: ";
@@ -310,7 +305,7 @@ int main() {
     cout << "\nPriority Queue Search by Genre: " << PQtime.count() <<" microseconds" << endl << endl << endl;
 
     cout << "Top 25 Games from BST: " << endl;
-    igdb.printBST(igdb.games);
+    igdb.printBST(igdb.games, user_input);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "\nBST Inorder Search by Genre: " << duration.count() << " microseconds" << endl;
